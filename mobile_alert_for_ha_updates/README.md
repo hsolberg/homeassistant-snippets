@@ -2,6 +2,8 @@
 
 ![screenshot](images/example_usecase.jpg)
 
+![screenshot](images/start_update.jpg)
+
 # Workflow explained
 
 This folder contains an example of how to set up alerts for Homeassistant updates and actions to trigger services.
