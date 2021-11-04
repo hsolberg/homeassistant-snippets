@@ -1,0 +1,9 @@
+---
+platform: template
+sensors:
+  supervisor_installed_version:
+    friendly_name: "Supervisor Installed Version"
+    value_template: "{{ state_attr('sensor.supervisor_updates', 'current_version') }}"
+  supervisor_latest_version:
+    friendly_name: "Supervisor Latest Version"
+    value_template: "{{ state_attr('sensor.supervisor_updates', 'newest_version') }}"

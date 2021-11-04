@@ -1,0 +1,14 @@
+---
+alias: Supervisor - Make partial snapshot after mobile action
+trigger:
+  platform: event
+  event_type: mobile_app_notification_action
+  event_data:
+    action: make_partial_snapshot
+action:
+  data_template:
+    name: "{{states.sensor.date.state}}_pre_{{states.sensor.latest_version.state}}_upgrade-partial"
+    addons:
+      - core_samba # add your list of add-ons to be included in the partial backup here. If you don't specify any add-ons then only Homeassistant core is included.
+  service: hassio.backup_partial
+# service was renamed in version 2021-11 from hassio.snapshot_partial to hassio.backup_partial

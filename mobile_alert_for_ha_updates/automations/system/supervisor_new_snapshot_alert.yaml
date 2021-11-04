@@ -1,0 +1,16 @@
+---
+alias: Supervisor Snapshot Available
+trigger:
+  platform: state
+  entity_id:
+    - sensor.latest_snapshot
+action:
+  - data_template:
+      message: "A new snapshot was just finished, you are now ready to upgrade Home Assistant."
+      title: "\ud83c\udf89 HomeAssistant Snapshot complete!"
+      data:
+        importance: high
+        actions:
+          - action: start_update
+            title: Start Update
+    service: notify.mobile_app_YOUR_MOBILE_HERE

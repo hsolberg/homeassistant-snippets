@@ -1,0 +1,5 @@
+---
+platform: version
+name: Latest Version
+#  image: intel-nuc # change for your system, see https://www.home-assistant.io/integrations/version/
+source: hassio

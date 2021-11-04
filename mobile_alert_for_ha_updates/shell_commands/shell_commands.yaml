@@ -1,0 +1,1 @@
+ha_core_upgrade: 'curl -X POST http://supervisor/core/update -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)"'

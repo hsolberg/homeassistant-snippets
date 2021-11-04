@@ -1,0 +1,12 @@
+---
+alias: Supervisor - Make full snapshot after mobile action
+trigger:
+  platform: event
+  event_type: mobile_app_notification_action
+  event_data:
+    action: make_full_snapshot
+action:
+  data_template:
+    name: "{{states.sensor.date.state}}_pre_{{states.sensor.latest_version.state}}_upgrade"
+  service: hassio.backup_full
+# service was renamed in version 2021-11 from hassio.snapshot_full to hassio.backup_full

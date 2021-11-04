@@ -1,0 +1,19 @@
+---
+alias: HomeAssistant Update Available
+trigger:
+  platform: template
+  value_template: "{{ states('sensor.latest_version') != states('sensor.installed_version') }}"
+action:
+  - data_template:
+      message: "An update for Home Assistant is available. You are running {{states('sensor.installed_version') }}, the latest version is {{ states('sensor.latest_version') }}."
+      title: "\ud83c\udf89 HomeAssistant Update Available!"
+      data:
+        importance: high
+        actions:
+          - action: make_full_snapshot
+            title: Make Snapshot
+          - action: make_partial_snapshot
+            title: Make Partial Snapshot
+          - action: start_update
+            title: Start Update
+    service: notify.mobile_app_YOUR_MOBILE_HERE

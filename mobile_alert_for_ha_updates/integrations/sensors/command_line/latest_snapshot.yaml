@@ -1,0 +1,4 @@
+---
+platform: command_line
+name: Latest snapshot
+command: 'curl http://supervisor/snapshots -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''[.data.snapshots[]] | sort_by(.date) | last | .slug'''

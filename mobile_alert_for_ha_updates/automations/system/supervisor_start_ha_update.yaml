@@ -1,0 +1,9 @@
+---
+alias: Supervisor - Start HomeAssistant update
+trigger:
+  platform: event
+  event_type: mobile_app_notification_action
+  event_data:
+    action: start_update
+action:
+  service: shell_command.ha_core_upgrade
