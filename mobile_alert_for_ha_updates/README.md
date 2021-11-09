@@ -1,8 +1,8 @@
 # Example alert
 
-![screenshot](images/example_usecase.jpg)
+[<img src="images/example_usecase.jpg" width="250"/>](images/example_usecase.jpg)
 
-![screenshot](images/start_update.jpg)
+[<img src="images/start_update.jpg" width="250"/>](images/start_update.jpg)
 
 # Workflow explained
 
