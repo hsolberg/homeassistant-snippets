@@ -1,0 +1,7 @@
+---
+## Documentation: https://www.home-assistant.io/integrations/person/
+name: Your Name
+id: your_id
+user_id: your_user_id
+device_trackers:
+  - !secret device_tracker.your_phone

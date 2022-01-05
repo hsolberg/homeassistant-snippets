@@ -1,0 +1,17 @@
+# If you already have an entry for sensor here, just change "sensor: !include_dir_list integrations/sensors" to "sensor split: !include_dir_list integrations/sensors"
+# This will tell homeassistant to load both without getting confused because of two "sensor:" entries. The same goes for "automation:"
+
+# Enable mobile_app (for tracking sensor from your phone)
+mobile_app:
+
+# SENSOR integrations
+sensor: !include_dir_list integrations/sensors
+
+# PERSON integration
+person: !include_dir_list integrations/person
+
+# INPUT_SELECT integration
+input_select: !include_dir_merge_named integrations/input_select
+
+# AUTOMATIONS #
+automation: !include_dir_list automations

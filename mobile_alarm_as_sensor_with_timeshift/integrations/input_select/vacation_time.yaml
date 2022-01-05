@@ -1,0 +1,9 @@
+---
+vacation_time:
+  name: Vacation?
+  options:
+   - Yes
+   - No
+   - Select option
+  initial: No
+  icon: mdi:palm-tree

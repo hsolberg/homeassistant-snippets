@@ -1,0 +1,36 @@
+---
+alias: Weekday routine working from home - Turn on Office Heater
+trigger:
+  - platform: template
+    value_template: >
+      {% set a = as_timestamp(states('sensor.YOUR_MOBILE_PHONE_next_alarm')) - 3600 %}
+      {{ now().timestamp() | int in [a] }}
+condition:
+  - condition: state
+    entity_id: binary_sensor.normal_workday
+    state: "on"
+  - condition: state
+    entity_id: input_select.vacation_time
+    state: "False"
+  - condition: state
+    entity_id: person.your_name
+    state: home
+  - condition: state
+    entity_id: input_select.working_from_home
+    state: "True"
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.season
+        state: autumn
+      - condition: state
+        entity_id: sensor.season
+        state: winter
+      - condition: state
+        entity_id: sensor.season
+        state: spring
+action:
+  - data:
+      entity_id: climate.ovn_kontoret
+      temperature: "22"
+    service: climate.set_temperature
