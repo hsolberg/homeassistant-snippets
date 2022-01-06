@@ -14,21 +14,21 @@ person:
 ################################################
 input_select:
   vacation_time:
-    name: Vacation?
+    name: "Vacation?"
     options:
-    - Yes
-    - No
-    - Select option
-    initial: No
+      - "Yes"
+      - "No"
+      - "Select option"
+    initial: "No"
     icon: mdi:palm-tree
 
   working_from_home:
-    name: Working from home?
+    name: "Working from home?"
     options:
-      - Yes
-      - No
-      - Select option
-    initial: Yes
+      - "Yes"
+      - "No"
+      - "Select option"
+    initial: "Yes"
     icon: mdi:domain
 
 ################################################
