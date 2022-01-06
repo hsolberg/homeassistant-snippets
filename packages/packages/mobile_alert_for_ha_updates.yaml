@@ -1,0 +1,117 @@
+################################################
+## Sensor
+################################################
+sensor:
+- platform: command_line
+  name: Latest snapshot
+  command: 'curl http://supervisor/snapshots -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''[.data.snapshots[]] | sort_by(.date) | last | .slug'''
+
+- platform: template
+  sensors:
+    supervisor_installed_version:
+      friendly_name: "Supervisor Installed Version"
+      value_template: "{{ state_attr('sensor.supervisor_updates', 'current_version') }}"
+    supervisor_latest_version:
+      friendly_name: "Supervisor Latest Version"
+      value_template: "{{ state_attr('sensor.supervisor_updates', 'newest_version') }}"
+
+- platform: time_date
+  display_options:
+    - "time"
+    - "date"
+    - "date_time"
+    - "date_time_utc"
+    - "date_time_iso"
+    - "time_date"
+    - "time_utc"
+    - "beat"
+
+- platform: version
+  name: Latest Version
+  #  image: intel-nuc # change for your system, see https://www.home-assistant.io/integrations/version/
+  source: hassio
+
+- platform: version
+  name: Installed Version
+  #  image: intel-nuc # change for your system, see https://www.home-assistant.io/integrations/version/
+  source: local
+
+################################################
+## Shell Command
+################################################
+shell_command:
+  ha_core_upgrade: 'curl -X POST http://supervisor/core/update -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)"'
+
+################################################
+## Automation
+################################################
+automation:
+- alias: Supervisor - HomeAssistant Update Available
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.latest_version') != states('sensor.installed_version') }}"
+  action:
+    - data_template:
+        message: "An update for Home Assistant is available. You are running {{states('sensor.installed_version') }}, the latest version is {{ states('sensor.latest_version') }}."
+        title: "\ud83c\udf89 HomeAssistant Update Available!"
+        data:
+          importance: high
+          actions:
+            - action: make_full_snapshot
+              title: Make Snapshot
+            - action: make_partial_snapshot
+              title: Make Partial Snapshot
+            - action: start_update
+              title: Start Update
+      service: notify.mobile_app_YOUR_MOBILE_HERE
+
+- alias: Supervisor - Make full snapshot after mobile action
+  trigger:
+    platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: make_full_snapshot
+  action:
+    data_template:
+      name: "{{states.sensor.date.state}}_pre_{{states.sensor.latest_version.state}}_upgrade"
+    service: hassio.backup_full
+  # service was renamed in version 2021-11 from hassio.snapshot_full to hassio.backup_full
+
+- alias: Supervisor - Make partial snapshot after mobile action
+  trigger:
+    platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: make_partial_snapshot
+  action:
+    data_template:
+      name: "{{states.sensor.date.state}}_pre_{{states.sensor.latest_version.state}}_upgrade-partial"
+      addons:
+        - core_samba # add your list of add-ons to be included in the partial backup here. If you don't specify any add-ons then only Homeassistant core is included.
+    service: hassio.backup_partial
+  # service was renamed in version 2021-11 from hassio.snapshot_partial to hassio.backup_partial
+
+- alias: Supervisor - Snapshot Available
+  trigger:
+    platform: state
+    entity_id:
+      - sensor.latest_snapshot
+  action:
+    - data_template:
+        message: "A new snapshot was just finished, you are now ready to upgrade Home Assistant."
+        title: "\ud83c\udf89 HomeAssistant Snapshot complete!"
+        data:
+          importance: high
+          actions:
+            - action: start_update
+              title: Start Update
+      service: notify.mobile_app_YOUR_MOBILE_HERE
+
+- alias: Supervisor - Start HomeAssistant update
+  trigger:
+    platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: start_update
+  action:
+    service: shell_command.ha_core_upgrade

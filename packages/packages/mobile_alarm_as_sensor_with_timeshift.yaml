@@ -1,0 +1,87 @@
+################################################
+## Person
+################################################
+person:
+  ## Documentation: https://www.home-assistant.io/integrations/person/
+  name: Your Name
+  id: your_id
+  user_id: your_user_id
+  device_trackers:
+    - device_tracker.your_phone
+
+################################################
+## Input Select
+################################################
+input_select:
+  vacation_time:
+    name: Vacation?
+    options:
+    - Yes
+    - No
+    - Select option
+    initial: No
+    icon: mdi:palm-tree
+
+  working_from_home:
+    name: Working from home?
+    options:
+      - Yes
+      - No
+      - Select option
+    initial: Yes
+    icon: mdi:domain
+
+################################################
+## Sensor
+################################################
+sensor:
+  platform: season
+  type: meteorological
+
+################################################
+## Binary Sensor
+################################################
+binary_sensor:
+  platform: workday
+  name: normal workday
+  country: "NO"
+
+################################################
+## Automation
+################################################
+automation:
+- alias: Weekday routine working from home - Turn on Office Heater
+  trigger:
+    - platform: template
+      value_template: >
+        {% set a = as_timestamp(states('sensor.YOUR_MOBILE_PHONE_next_alarm')) - 3600 %}
+        {{ now().timestamp() | int in [a] }}
+  condition:
+    - condition: state
+      entity_id: binary_sensor.normal_workday
+      state: "on"
+    - condition: state
+      entity_id: input_select.vacation_time
+      state: "False"
+    - condition: state
+      entity_id: person.your_name
+      state: home
+    - condition: state
+      entity_id: input_select.working_from_home
+      state: "True"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.season
+          state: autumn
+        - condition: state
+          entity_id: sensor.season
+          state: winter
+        - condition: state
+          entity_id: sensor.season
+          state: spring
+  action:
+    - data:
+        entity_id: climate.ovn_kontoret
+        temperature: "22"
+      service: climate.set_temperature

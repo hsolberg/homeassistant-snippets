@@ -4,4 +4,4 @@ name: Your Name
 id: your_id
 user_id: your_user_id
 device_trackers:
-  - !secret device_tracker.your_phone
+  - device_tracker.your_phone # https://www.home-assistant.io/integrations/device_tracker/
